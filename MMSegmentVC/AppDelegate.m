@@ -7,7 +7,8 @@
 //
 
 #import "AppDelegate.h"
-#import "MMHomePageVC.h"
+#import "MMPushVC.h"
+#import "MMBaseNavigationVC.h"
 
 @interface AppDelegate ()
 
@@ -18,10 +19,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    MMHomePageVC *vc = [[MMHomePageVC alloc]init];
-    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:vc];;
+    self.window.backgroundColor = [UIColor whiteColor];
+    MMPushVC *vc = [[MMPushVC alloc]init];
+    MMBaseNavigationVC *nav = [[MMBaseNavigationVC alloc]initWithRootViewController:vc];
+    
     self.window.rootViewController = nav;
+    
     [self.window makeKeyAndVisible];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor purpleColor]];
     return YES;
 }
 
