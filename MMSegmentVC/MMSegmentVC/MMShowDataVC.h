@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface MMShowDataVC : UIViewController
+#import "MMBaseVC.h"
+@interface MMShowDataVC : MMBaseVC
 @property (nonatomic, assign)BOOL isLoadData;
 
 - (void)loadDataWith:(NSInteger)index;

@@ -42,6 +42,11 @@ typedef NS_ENUM(NSInteger, SegmentControlStyle) {
 //内容类型，默认为滚动
 @property (nonatomic, assign) SegmentControlStyle segmentControlType;
 
+//这个是从其他页面进来,设置选中的selectIndex
+//push到卖品的Index
+@property (nonatomic, assign)NSInteger pushGoodIndexNum;
+
+
 #pragma mark - 对外暴露的方法
 //初始化方法(标签栏标题和对应的VC)
 - (void)initSegment;

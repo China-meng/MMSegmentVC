@@ -36,7 +36,10 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
+
     [self.view addSubview:self.tableView];
+
     
 }
 

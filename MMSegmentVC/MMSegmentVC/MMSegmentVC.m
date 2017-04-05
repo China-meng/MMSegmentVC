@@ -8,6 +8,7 @@
 
 #import "MMSegmentVC.h"
 #import "MMShowDataVC.h"
+#import "AutoScrollView.h"
 
 #define HEADBTN_TAG                 10000
 #define Default_ButtonHeight        45
@@ -23,11 +24,15 @@
 @property (nonatomic, strong) UIScrollView *headScrollView;
 @property (nonatomic, assign) NSInteger selectIndex;
 @property (nonatomic, strong) UIView *lineView;
-@property (nonatomic, strong) UIScrollView *contentScrollView;
+@property (nonatomic, strong) AutoScrollView *contentScrollView;
 
 @end
 
-@implementation MMSegmentVC
+@implementation MMSegmentVC {
+    float startContentOffsetX;
+    float willEndContentOffsetX;
+    
+}
 
 
 - (void)viewDidLoad {
@@ -36,10 +41,20 @@
 }
 #pragma mark - 初始化方法(标签栏标题和对应的VC)
 - (void)initSegment {
+
     // 根据传入的title数组新建button显示在顶部scrollView上
     [self addButtonInScrollHeader:_titleArray];
     // 根据传入的viewController数组，将viewController的view添加到显示内容的scrollView
     [self addVcInScrollViewContent:_subViewControllers];
+    
+    //如果pushGoodIndexNum存在,则push到卖品的Index
+    if (_pushGoodIndexNum) {
+        [_contentScrollView scrollRectToVisible:CGRectMake((_pushGoodIndexNum - HEADBTN_TAG) *MainScreenWidth, 0, MainScreenWidth, _contentScrollView.frame.size.height) animated:YES];
+        [self didSelectSegmentIndex:_pushGoodIndexNum];
+        
+    }
+
+
 
 }
 #pragma mark - 根据传入的title数组新建button显示在顶部scrollView上
@@ -88,9 +103,17 @@
     currentSelectBtn.selected = YES;
     CGRect lineViewRect = self.lineView.frame;
     lineViewRect.origin.x = (index - HEADBTN_TAG) *_buttonWidth;
-    [UIView animateWithDuration:0.3 animations:^{
-        self.lineView.frame = lineViewRect;
-    }];
+    if (_pushGoodIndexNum) {
+        [UIView animateWithDuration:0.2 animations:^{
+            self.lineView.frame = lineViewRect;
+        }];
+    } else  {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.lineView.frame = lineViewRect;
+        }];
+    
+    }
+
     NSInteger indexOfVC = index - 10000;
     id vC = _subViewControllers[indexOfVC];
     if ([vC isKindOfClass:[MMShowDataVC class]]) {
@@ -102,7 +125,7 @@
 }
 #pragma mark - 根据传入的viewController数组，将viewController的view添加到显示内容的scrollView
 - (void)addVcInScrollViewContent:(NSArray *)subViewControllers {
-    _contentScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, self.buttonHeight, MainScreenWidth, MainScreenHeight - self.buttonHeight)];
+    _contentScrollView = [[AutoScrollView alloc]initWithFrame:CGRectMake(0, self.buttonHeight, MainScreenWidth, MainScreenHeight - self.buttonHeight)];
     _contentScrollView.contentSize = CGSizeMake(MainScreenWidth * subViewControllers.count, MainScreenHeight - self.buttonHeight);
     [_contentScrollView setPagingEnabled:YES];
     if (_segmentControlType == 0) {
@@ -224,7 +247,17 @@
     return _fontSize;
 }
 
-
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{    //拖动前的起始坐标
+    
+    startContentOffsetX = scrollView.contentOffset.x;
+    
+}
+//
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{    //将要停止前的坐标
+    
+    willEndContentOffsetX = scrollView.contentOffset.x;
+    
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface MMHomePageVC : UIViewController
+#import "MMBaseVC.h"
+@interface MMHomePageVC : MMBaseVC
+@property (nonatomic, assign) NSInteger pushGoodIndexNum;
 
 @end
